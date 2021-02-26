@@ -26,13 +26,13 @@ $H_a$ There is a significant difference in average score on the WORDSUM test bet
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
 
-
+We will  present the data in a box plot and in a numerical table. Then we will analyze the data with a One-Way ANOVA to determine if we should accept the null hypothesis or the alternative hypothesis.  
 
 # Results
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
 
-## Descriptive Results
+## Descriptive Results  
 
 ### Graphical Descriptive Results
 
@@ -46,16 +46,41 @@ basicCN <- ggplot(GSS,aes(x=DEGREE,y=WORDSUM))
 basicCN + geom_boxplot()
 ```
   
-This boxplot shows that the students with graduate degrees do better on the WordSum test than the students with high school or light high school dregree. This can be deduced because the graduate boxplot is above, and does not overlap with, either the high school or light high school box plot. 
+This boxplot shows that students with graduate degrees score higher on the WordSum test than students with high school or light high school degree. This can be deduced because the graduate box is above, and does not overlap with, either the high school or light high school boxes.    
+
 ### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+
+```{r}
+favstats(WORDSUM~DEGREE,data=GSS)
+```
+  
+This table shows that on average, students with graduate degrees score highest on the WordSum test, followed by junior college, then bachelor, then high school and then light high school degrees. The average scores of students with high school and light high school degrees are more than one standard deviation away from average score of students with graduate degrees.  
 
 ## Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
+```{r}
+model1 <- aov(WORDSUM~DEGREE,data=GSS)
+summary.aov(model1)
+```
 
+This very small p-value of 0.000236 indicates that we must reject the null hypothesis and accept the alternative, that there is a significant difference in average score on the WordSum test between at least two levels of degree. We must complete a Tukey HSD to determine which two degrees levels have significantly different average scores on the WordSum tests.   
+  
+### TukeyHSD  
+
+```{r}
+#we specify the margins starting at the bottom and proceeding clockwise - thus 8.7 is the left side margin to hold the names of the factors
+par(mar = c(3, 15, 2, 2))
+plot(TukeyHSD(model1),las=2)
+```
+
+The Tukey HSD plot shows that the average score of students with graduates degrees is statistically different than the average score of students with light high school and high school degrees. There is no significant difference between all other levels of degrees.  
+  
 # Discussion and Conclusion
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
+
+The One-Way Anova and the Tukey HSD show that we must accept the alternative hypothesis, that there is a significant difference in average scores on the WordSum test between at least two levels of degree. From the Tukey HSD, we learned that there is a significant difference present between students with graduate degrees and those with high school degrees and also with students with light high school degrees. In all other comparisons, there is no difference in WordSum test scores. 
